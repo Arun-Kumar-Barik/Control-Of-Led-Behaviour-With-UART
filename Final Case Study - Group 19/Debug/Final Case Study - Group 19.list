@@ -1,0 +1,1115 @@
+
+Final Case Study - Group 19.elf:     file format elf32-littlearm
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .isr_vector   000001c4  08000000  08000000  00001000  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  1 .text         000006f0  080001c4  080001c4  000011c4  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .rodata       00000000  080008b4  080008b4  00002004  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  3 .ARM.extab    00000000  080008b4  080008b4  00002004  2**0
+                  CONTENTS
+  4 .ARM          00000000  080008b4  080008b4  00002004  2**0
+                  CONTENTS
+  5 .preinit_array 00000000  080008b4  080008b4  00002004  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  6 .init_array   00000004  080008b4  080008b4  000018b4  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  7 .fini_array   00000004  080008b8  080008b8  000018b8  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  8 .data         00000004  20000000  080008bc  00002000  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  9 .bss          00000020  20000004  080008c0  00002004  2**2
+                  ALLOC
+ 10 ._user_heap_stack 00000604  20000024  080008c0  00002024  2**0
+                  ALLOC
+ 11 .ARM.attributes 0000002a  00000000  00000000  00002004  2**0
+                  CONTENTS, READONLY
+ 12 .debug_info   00001086  00000000  00000000  0000202e  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 13 .debug_abbrev 00000573  00000000  00000000  000030b4  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 14 .debug_aranges 00000120  00000000  00000000  00003628  2**3
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 15 .debug_rnglists 000000b8  00000000  00000000  00003748  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 16 .debug_macro  0000bd03  00000000  00000000  00003800  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 17 .debug_line   00001e58  00000000  00000000  0000f503  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 18 .debug_str    0004188c  00000000  00000000  0001135b  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 19 .comment      00000043  00000000  00000000  00052be7  2**0
+                  CONTENTS, READONLY
+ 20 .debug_frame  00000240  00000000  00000000  00052c2c  2**2
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 21 .debug_line_str 00000071  00000000  00000000  00052e6c  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+
+Disassembly of section .text:
+
+080001c4 <__do_global_dtors_aux>:
+ 80001c4:	b510      	push	{r4, lr}
+ 80001c6:	4c05      	ldr	r4, [pc, #20]	@ (80001dc <__do_global_dtors_aux+0x18>)
+ 80001c8:	7823      	ldrb	r3, [r4, #0]
+ 80001ca:	b933      	cbnz	r3, 80001da <__do_global_dtors_aux+0x16>
+ 80001cc:	4b04      	ldr	r3, [pc, #16]	@ (80001e0 <__do_global_dtors_aux+0x1c>)
+ 80001ce:	b113      	cbz	r3, 80001d6 <__do_global_dtors_aux+0x12>
+ 80001d0:	4804      	ldr	r0, [pc, #16]	@ (80001e4 <__do_global_dtors_aux+0x20>)
+ 80001d2:	f3af 8000 	nop.w
+ 80001d6:	2301      	movs	r3, #1
+ 80001d8:	7023      	strb	r3, [r4, #0]
+ 80001da:	bd10      	pop	{r4, pc}
+ 80001dc:	20000004 	.word	0x20000004
+ 80001e0:	00000000 	.word	0x00000000
+ 80001e4:	0800089c 	.word	0x0800089c
+
+080001e8 <frame_dummy>:
+ 80001e8:	b508      	push	{r3, lr}
+ 80001ea:	4b03      	ldr	r3, [pc, #12]	@ (80001f8 <frame_dummy+0x10>)
+ 80001ec:	b11b      	cbz	r3, 80001f6 <frame_dummy+0xe>
+ 80001ee:	4903      	ldr	r1, [pc, #12]	@ (80001fc <frame_dummy+0x14>)
+ 80001f0:	4803      	ldr	r0, [pc, #12]	@ (8000200 <frame_dummy+0x18>)
+ 80001f2:	f3af 8000 	nop.w
+ 80001f6:	bd08      	pop	{r3, pc}
+ 80001f8:	00000000 	.word	0x00000000
+ 80001fc:	20000008 	.word	0x20000008
+ 8000200:	0800089c 	.word	0x0800089c
+
+08000204 <LED_Init>:
+#include "stm32f446xx.h"
+
+#define LED_PIN 5
+#define BUTTON_PIN 13
+
+void LED_Init(void) {
+ 8000204:	b480      	push	{r7}
+ 8000206:	af00      	add	r7, sp, #0
+    // Enable clock for GPIOA
+    RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
+ 8000208:	4b07      	ldr	r3, [pc, #28]	@ (8000228 <LED_Init+0x24>)
+ 800020a:	6b1b      	ldr	r3, [r3, #48]	@ 0x30
+ 800020c:	4a06      	ldr	r2, [pc, #24]	@ (8000228 <LED_Init+0x24>)
+ 800020e:	f043 0301 	orr.w	r3, r3, #1
+ 8000212:	6313      	str	r3, [r2, #48]	@ 0x30
+
+    // Configure PA5 as output
+    GPIOA->MODER |= (1 << (LED_PIN * 2));
+ 8000214:	4b05      	ldr	r3, [pc, #20]	@ (800022c <LED_Init+0x28>)
+ 8000216:	681b      	ldr	r3, [r3, #0]
+ 8000218:	4a04      	ldr	r2, [pc, #16]	@ (800022c <LED_Init+0x28>)
+ 800021a:	f443 6380 	orr.w	r3, r3, #1024	@ 0x400
+ 800021e:	6013      	str	r3, [r2, #0]
+}
+ 8000220:	bf00      	nop
+ 8000222:	46bd      	mov	sp, r7
+ 8000224:	bc80      	pop	{r7}
+ 8000226:	4770      	bx	lr
+ 8000228:	40023800 	.word	0x40023800
+ 800022c:	40020000 	.word	0x40020000
+
+08000230 <Button_Init>:
+
+void Button_Init(void) {
+ 8000230:	b480      	push	{r7}
+ 8000232:	af00      	add	r7, sp, #0
+    // Enable clock for GPIOC
+    RCC->AHB1ENR |= RCC_AHB1ENR_GPIOCEN;
+ 8000234:	4b07      	ldr	r3, [pc, #28]	@ (8000254 <Button_Init+0x24>)
+ 8000236:	6b1b      	ldr	r3, [r3, #48]	@ 0x30
+ 8000238:	4a06      	ldr	r2, [pc, #24]	@ (8000254 <Button_Init+0x24>)
+ 800023a:	f043 0304 	orr.w	r3, r3, #4
+ 800023e:	6313      	str	r3, [r2, #48]	@ 0x30
+
+    // Configure PC13 as input
+    GPIOC->MODER &= ~(3 << (BUTTON_PIN * 2));
+ 8000240:	4b05      	ldr	r3, [pc, #20]	@ (8000258 <Button_Init+0x28>)
+ 8000242:	681b      	ldr	r3, [r3, #0]
+ 8000244:	4a04      	ldr	r2, [pc, #16]	@ (8000258 <Button_Init+0x28>)
+ 8000246:	f023 6340 	bic.w	r3, r3, #201326592	@ 0xc000000
+ 800024a:	6013      	str	r3, [r2, #0]
+}
+ 800024c:	bf00      	nop
+ 800024e:	46bd      	mov	sp, r7
+ 8000250:	bc80      	pop	{r7}
+ 8000252:	4770      	bx	lr
+ 8000254:	40023800 	.word	0x40023800
+ 8000258:	40020800 	.word	0x40020800
+
+0800025c <Button_Pressed>:
+
+int Button_Pressed(void) {
+ 800025c:	b480      	push	{r7}
+ 800025e:	af00      	add	r7, sp, #0
+    return !(GPIOC->IDR & (1 << BUTTON_PIN));
+ 8000260:	4b06      	ldr	r3, [pc, #24]	@ (800027c <Button_Pressed+0x20>)
+ 8000262:	691b      	ldr	r3, [r3, #16]
+ 8000264:	f403 5300 	and.w	r3, r3, #8192	@ 0x2000
+ 8000268:	2b00      	cmp	r3, #0
+ 800026a:	bf0c      	ite	eq
+ 800026c:	2301      	moveq	r3, #1
+ 800026e:	2300      	movne	r3, #0
+ 8000270:	b2db      	uxtb	r3, r3
+}
+ 8000272:	4618      	mov	r0, r3
+ 8000274:	46bd      	mov	sp, r7
+ 8000276:	bc80      	pop	{r7}
+ 8000278:	4770      	bx	lr
+ 800027a:	bf00      	nop
+ 800027c:	40020800 	.word	0x40020800
+
+08000280 <LED_Blinking>:
+
+void LED_Blinking(void) {
+ 8000280:	b580      	push	{r7, lr}
+ 8000282:	b082      	sub	sp, #8
+ 8000284:	af00      	add	r7, sp, #0
+    static uint32_t delay = 200;  // Initial delay in milliseconds
+    static uint8_t press_count = 0;
+
+    while (1) {
+        if (Button_Pressed()) {
+ 8000286:	f7ff ffe9 	bl	800025c <Button_Pressed>
+ 800028a:	4603      	mov	r3, r0
+ 800028c:	2b00      	cmp	r3, #0
+ 800028e:	d01e      	beq.n	80002ce <LED_Blinking+0x4e>
+            UART_SendChar('B'); // To Verify whether button is actually pressed
+ 8000290:	2042      	movs	r0, #66	@ 0x42
+ 8000292:	f000 fa8d 	bl	80007b0 <UART_SendChar>
+            press_count++;
+ 8000296:	4b19      	ldr	r3, [pc, #100]	@ (80002fc <LED_Blinking+0x7c>)
+ 8000298:	781b      	ldrb	r3, [r3, #0]
+ 800029a:	3301      	adds	r3, #1
+ 800029c:	b2da      	uxtb	r2, r3
+ 800029e:	4b17      	ldr	r3, [pc, #92]	@ (80002fc <LED_Blinking+0x7c>)
+ 80002a0:	701a      	strb	r2, [r3, #0]
+            if (press_count >= 4) {
+ 80002a2:	4b16      	ldr	r3, [pc, #88]	@ (80002fc <LED_Blinking+0x7c>)
+ 80002a4:	781b      	ldrb	r3, [r3, #0]
+ 80002a6:	2b03      	cmp	r3, #3
+ 80002a8:	d906      	bls.n	80002b8 <LED_Blinking+0x38>
+                press_count = 0;
+ 80002aa:	4b14      	ldr	r3, [pc, #80]	@ (80002fc <LED_Blinking+0x7c>)
+ 80002ac:	2200      	movs	r2, #0
+ 80002ae:	701a      	strb	r2, [r3, #0]
+                delay = 200;  // Reset to initial delay
+ 80002b0:	4b13      	ldr	r3, [pc, #76]	@ (8000300 <LED_Blinking+0x80>)
+ 80002b2:	22c8      	movs	r2, #200	@ 0xc8
+ 80002b4:	601a      	str	r2, [r3, #0]
+ 80002b6:	e004      	b.n	80002c2 <LED_Blinking+0x42>
+            } else {
+                delay += 200;  // Increase delay
+ 80002b8:	4b11      	ldr	r3, [pc, #68]	@ (8000300 <LED_Blinking+0x80>)
+ 80002ba:	681b      	ldr	r3, [r3, #0]
+ 80002bc:	33c8      	adds	r3, #200	@ 0xc8
+ 80002be:	4a10      	ldr	r2, [pc, #64]	@ (8000300 <LED_Blinking+0x80>)
+ 80002c0:	6013      	str	r3, [r2, #0]
+            }
+            while (Button_Pressed()); // Wait for button release
+ 80002c2:	bf00      	nop
+ 80002c4:	f7ff ffca 	bl	800025c <Button_Pressed>
+ 80002c8:	4603      	mov	r3, r0
+ 80002ca:	2b00      	cmp	r3, #0
+ 80002cc:	d1fa      	bne.n	80002c4 <LED_Blinking+0x44>
+        }
+        GPIOA->ODR ^= (1 << LED_PIN);
+ 80002ce:	4b0d      	ldr	r3, [pc, #52]	@ (8000304 <LED_Blinking+0x84>)
+ 80002d0:	695b      	ldr	r3, [r3, #20]
+ 80002d2:	4a0c      	ldr	r2, [pc, #48]	@ (8000304 <LED_Blinking+0x84>)
+ 80002d4:	f083 0320 	eor.w	r3, r3, #32
+ 80002d8:	6153      	str	r3, [r2, #20]
+        for (volatile uint32_t i = 0; i < delay * 1000; i++); // Simple delay
+ 80002da:	2300      	movs	r3, #0
+ 80002dc:	607b      	str	r3, [r7, #4]
+ 80002de:	e002      	b.n	80002e6 <LED_Blinking+0x66>
+ 80002e0:	687b      	ldr	r3, [r7, #4]
+ 80002e2:	3301      	adds	r3, #1
+ 80002e4:	607b      	str	r3, [r7, #4]
+ 80002e6:	4b06      	ldr	r3, [pc, #24]	@ (8000300 <LED_Blinking+0x80>)
+ 80002e8:	681b      	ldr	r3, [r3, #0]
+ 80002ea:	f44f 727a 	mov.w	r2, #1000	@ 0x3e8
+ 80002ee:	fb03 f202 	mul.w	r2, r3, r2
+ 80002f2:	687b      	ldr	r3, [r7, #4]
+ 80002f4:	429a      	cmp	r2, r3
+ 80002f6:	d8f3      	bhi.n	80002e0 <LED_Blinking+0x60>
+        if (Button_Pressed()) {
+ 80002f8:	e7c5      	b.n	8000286 <LED_Blinking+0x6>
+ 80002fa:	bf00      	nop
+ 80002fc:	20000020 	.word	0x20000020
+ 8000300:	20000000 	.word	0x20000000
+ 8000304:	40020000 	.word	0x40020000
+
+08000308 <main>:
+void PWM_Init(void);
+void PWM_SetDutyCycle(uint8_t duty_cycle);
+void LED_PWM_Control(void);
+void Menu(void);
+
+int main(void) {
+ 8000308:	b580      	push	{r7, lr}
+ 800030a:	af00      	add	r7, sp, #0
+    UART_Init();
+ 800030c:	f000 fa20 	bl	8000750 <UART_Init>
+    LED_Init();
+ 8000310:	f7ff ff78 	bl	8000204 <LED_Init>
+    Button_Init();
+ 8000314:	f7ff ff8c 	bl	8000230 <Button_Init>
+    PWM_Init();
+ 8000318:	f000 f964 	bl	80005e4 <PWM_Init>
+
+    Menu();
+ 800031c:	f000 f803 	bl	8000326 <Menu>
+ 8000320:	2300      	movs	r3, #0
+
+//    while (1) {
+//        // Main loop
+//    }
+}
+ 8000322:	4618      	mov	r0, r3
+ 8000324:	bd80      	pop	{r7, pc}
+
+08000326 <Menu>:
+#include "stm32f446xx.h"
+
+void Menu(void) {
+ 8000326:	b580      	push	{r7, lr}
+ 8000328:	b082      	sub	sp, #8
+ 800032a:	af00      	add	r7, sp, #0
+    char command;
+
+    while (1) {
+        UART_SendChar('M');
+ 800032c:	204d      	movs	r0, #77	@ 0x4d
+ 800032e:	f000 fa3f 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('e');
+ 8000332:	2065      	movs	r0, #101	@ 0x65
+ 8000334:	f000 fa3c 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('n');
+ 8000338:	206e      	movs	r0, #110	@ 0x6e
+ 800033a:	f000 fa39 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('u');
+ 800033e:	2075      	movs	r0, #117	@ 0x75
+ 8000340:	f000 fa36 	bl	80007b0 <UART_SendChar>
+        UART_SendChar(':');
+ 8000344:	203a      	movs	r0, #58	@ 0x3a
+ 8000346:	f000 fa33 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('\n');
+ 800034a:	200a      	movs	r0, #10
+ 800034c:	f000 fa30 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('1');
+ 8000350:	2031      	movs	r0, #49	@ 0x31
+ 8000352:	f000 fa2d 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('.');
+ 8000356:	202e      	movs	r0, #46	@ 0x2e
+ 8000358:	f000 fa2a 	bl	80007b0 <UART_SendChar>
+        UART_SendChar(' ');
+ 800035c:	2020      	movs	r0, #32
+ 800035e:	f000 fa27 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('L');
+ 8000362:	204c      	movs	r0, #76	@ 0x4c
+ 8000364:	f000 fa24 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('E');
+ 8000368:	2045      	movs	r0, #69	@ 0x45
+ 800036a:	f000 fa21 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('D');
+ 800036e:	2044      	movs	r0, #68	@ 0x44
+ 8000370:	f000 fa1e 	bl	80007b0 <UART_SendChar>
+        UART_SendChar(' ');
+ 8000374:	2020      	movs	r0, #32
+ 8000376:	f000 fa1b 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('B');
+ 800037a:	2042      	movs	r0, #66	@ 0x42
+ 800037c:	f000 fa18 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('l');
+ 8000380:	206c      	movs	r0, #108	@ 0x6c
+ 8000382:	f000 fa15 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('i');
+ 8000386:	2069      	movs	r0, #105	@ 0x69
+ 8000388:	f000 fa12 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('n');
+ 800038c:	206e      	movs	r0, #110	@ 0x6e
+ 800038e:	f000 fa0f 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('k');
+ 8000392:	206b      	movs	r0, #107	@ 0x6b
+ 8000394:	f000 fa0c 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('i');
+ 8000398:	2069      	movs	r0, #105	@ 0x69
+ 800039a:	f000 fa09 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('n');
+ 800039e:	206e      	movs	r0, #110	@ 0x6e
+ 80003a0:	f000 fa06 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('g');
+ 80003a4:	2067      	movs	r0, #103	@ 0x67
+ 80003a6:	f000 fa03 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('\n');
+ 80003aa:	200a      	movs	r0, #10
+ 80003ac:	f000 fa00 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('2');
+ 80003b0:	2032      	movs	r0, #50	@ 0x32
+ 80003b2:	f000 f9fd 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('.');
+ 80003b6:	202e      	movs	r0, #46	@ 0x2e
+ 80003b8:	f000 f9fa 	bl	80007b0 <UART_SendChar>
+        UART_SendChar(' ');
+ 80003bc:	2020      	movs	r0, #32
+ 80003be:	f000 f9f7 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('L');
+ 80003c2:	204c      	movs	r0, #76	@ 0x4c
+ 80003c4:	f000 f9f4 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('E');
+ 80003c8:	2045      	movs	r0, #69	@ 0x45
+ 80003ca:	f000 f9f1 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('D');
+ 80003ce:	2044      	movs	r0, #68	@ 0x44
+ 80003d0:	f000 f9ee 	bl	80007b0 <UART_SendChar>
+        UART_SendChar(' ');
+ 80003d4:	2020      	movs	r0, #32
+ 80003d6:	f000 f9eb 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('P');
+ 80003da:	2050      	movs	r0, #80	@ 0x50
+ 80003dc:	f000 f9e8 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('W');
+ 80003e0:	2057      	movs	r0, #87	@ 0x57
+ 80003e2:	f000 f9e5 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('M');
+ 80003e6:	204d      	movs	r0, #77	@ 0x4d
+ 80003e8:	f000 f9e2 	bl	80007b0 <UART_SendChar>
+        UART_SendChar(' ');
+ 80003ec:	2020      	movs	r0, #32
+ 80003ee:	f000 f9df 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('C');
+ 80003f2:	2043      	movs	r0, #67	@ 0x43
+ 80003f4:	f000 f9dc 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('o');
+ 80003f8:	206f      	movs	r0, #111	@ 0x6f
+ 80003fa:	f000 f9d9 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('n');
+ 80003fe:	206e      	movs	r0, #110	@ 0x6e
+ 8000400:	f000 f9d6 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('t');
+ 8000404:	2074      	movs	r0, #116	@ 0x74
+ 8000406:	f000 f9d3 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('r');
+ 800040a:	2072      	movs	r0, #114	@ 0x72
+ 800040c:	f000 f9d0 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('o');
+ 8000410:	206f      	movs	r0, #111	@ 0x6f
+ 8000412:	f000 f9cd 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('l');
+ 8000416:	206c      	movs	r0, #108	@ 0x6c
+ 8000418:	f000 f9ca 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('\n');
+ 800041c:	200a      	movs	r0, #10
+ 800041e:	f000 f9c7 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('3');
+ 8000422:	2033      	movs	r0, #51	@ 0x33
+ 8000424:	f000 f9c4 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('.');
+ 8000428:	202e      	movs	r0, #46	@ 0x2e
+ 800042a:	f000 f9c1 	bl	80007b0 <UART_SendChar>
+        UART_SendChar(' ');
+ 800042e:	2020      	movs	r0, #32
+ 8000430:	f000 f9be 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('E');
+ 8000434:	2045      	movs	r0, #69	@ 0x45
+ 8000436:	f000 f9bb 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('x');
+ 800043a:	2078      	movs	r0, #120	@ 0x78
+ 800043c:	f000 f9b8 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('i');
+ 8000440:	2069      	movs	r0, #105	@ 0x69
+ 8000442:	f000 f9b5 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('t');
+ 8000446:	2074      	movs	r0, #116	@ 0x74
+ 8000448:	f000 f9b2 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('\n');
+ 800044c:	200a      	movs	r0, #10
+ 800044e:	f000 f9af 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('E');
+ 8000452:	2045      	movs	r0, #69	@ 0x45
+ 8000454:	f000 f9ac 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('n');
+ 8000458:	206e      	movs	r0, #110	@ 0x6e
+ 800045a:	f000 f9a9 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('t');
+ 800045e:	2074      	movs	r0, #116	@ 0x74
+ 8000460:	f000 f9a6 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('e');
+ 8000464:	2065      	movs	r0, #101	@ 0x65
+ 8000466:	f000 f9a3 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('r');
+ 800046a:	2072      	movs	r0, #114	@ 0x72
+ 800046c:	f000 f9a0 	bl	80007b0 <UART_SendChar>
+        UART_SendChar(' ');
+ 8000470:	2020      	movs	r0, #32
+ 8000472:	f000 f99d 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('y');
+ 8000476:	2079      	movs	r0, #121	@ 0x79
+ 8000478:	f000 f99a 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('o');
+ 800047c:	206f      	movs	r0, #111	@ 0x6f
+ 800047e:	f000 f997 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('u');
+ 8000482:	2075      	movs	r0, #117	@ 0x75
+ 8000484:	f000 f994 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('r');
+ 8000488:	2072      	movs	r0, #114	@ 0x72
+ 800048a:	f000 f991 	bl	80007b0 <UART_SendChar>
+        UART_SendChar(' ');
+ 800048e:	2020      	movs	r0, #32
+ 8000490:	f000 f98e 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('c');
+ 8000494:	2063      	movs	r0, #99	@ 0x63
+ 8000496:	f000 f98b 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('h');
+ 800049a:	2068      	movs	r0, #104	@ 0x68
+ 800049c:	f000 f988 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('o');
+ 80004a0:	206f      	movs	r0, #111	@ 0x6f
+ 80004a2:	f000 f985 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('i');
+ 80004a6:	2069      	movs	r0, #105	@ 0x69
+ 80004a8:	f000 f982 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('c');
+ 80004ac:	2063      	movs	r0, #99	@ 0x63
+ 80004ae:	f000 f97f 	bl	80007b0 <UART_SendChar>
+        UART_SendChar('e');
+ 80004b2:	2065      	movs	r0, #101	@ 0x65
+ 80004b4:	f000 f97c 	bl	80007b0 <UART_SendChar>
+        UART_SendChar(':');
+ 80004b8:	203a      	movs	r0, #58	@ 0x3a
+ 80004ba:	f000 f979 	bl	80007b0 <UART_SendChar>
+        UART_SendChar(' ');
+ 80004be:	2020      	movs	r0, #32
+ 80004c0:	f000 f976 	bl	80007b0 <UART_SendChar>
+
+        command = UART_ReceiveChar();
+ 80004c4:	f000 f98a 	bl	80007dc <UART_ReceiveChar>
+ 80004c8:	4603      	mov	r3, r0
+ 80004ca:	71fb      	strb	r3, [r7, #7]
+        UART_SendChar(command); // Echo the received character for debugging
+ 80004cc:	79fb      	ldrb	r3, [r7, #7]
+ 80004ce:	4618      	mov	r0, r3
+ 80004d0:	f000 f96e 	bl	80007b0 <UART_SendChar>
+
+        switch (command) {
+ 80004d4:	79fb      	ldrb	r3, [r7, #7]
+ 80004d6:	2b33      	cmp	r3, #51	@ 0x33
+ 80004d8:	d00c      	beq.n	80004f4 <Menu+0x1ce>
+ 80004da:	2b33      	cmp	r3, #51	@ 0x33
+ 80004dc:	dc2c      	bgt.n	8000538 <Menu+0x212>
+ 80004de:	2b31      	cmp	r3, #49	@ 0x31
+ 80004e0:	d002      	beq.n	80004e8 <Menu+0x1c2>
+ 80004e2:	2b32      	cmp	r3, #50	@ 0x32
+ 80004e4:	d003      	beq.n	80004ee <Menu+0x1c8>
+ 80004e6:	e027      	b.n	8000538 <Menu+0x212>
+            case '1':
+                LED_Blinking();
+ 80004e8:	f7ff feca 	bl	8000280 <LED_Blinking>
+                break;
+ 80004ec:	e076      	b.n	80005dc <Menu+0x2b6>
+            case '2':
+                LED_PWM_Control();
+ 80004ee:	f000 f8d1 	bl	8000694 <LED_PWM_Control>
+                break;
+ 80004f2:	e073      	b.n	80005dc <Menu+0x2b6>
+            case '3':
+                UART_SendChar('E');
+ 80004f4:	2045      	movs	r0, #69	@ 0x45
+ 80004f6:	f000 f95b 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('x');
+ 80004fa:	2078      	movs	r0, #120	@ 0x78
+ 80004fc:	f000 f958 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('i');
+ 8000500:	2069      	movs	r0, #105	@ 0x69
+ 8000502:	f000 f955 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('t');
+ 8000506:	2074      	movs	r0, #116	@ 0x74
+ 8000508:	f000 f952 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('i');
+ 800050c:	2069      	movs	r0, #105	@ 0x69
+ 800050e:	f000 f94f 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('n');
+ 8000512:	206e      	movs	r0, #110	@ 0x6e
+ 8000514:	f000 f94c 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('g');
+ 8000518:	2067      	movs	r0, #103	@ 0x67
+ 800051a:	f000 f949 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('.');
+ 800051e:	202e      	movs	r0, #46	@ 0x2e
+ 8000520:	f000 f946 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('.');
+ 8000524:	202e      	movs	r0, #46	@ 0x2e
+ 8000526:	f000 f943 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('.');
+ 800052a:	202e      	movs	r0, #46	@ 0x2e
+ 800052c:	f000 f940 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('\n');
+ 8000530:	200a      	movs	r0, #10
+ 8000532:	f000 f93d 	bl	80007b0 <UART_SendChar>
+                return;
+ 8000536:	e052      	b.n	80005de <Menu+0x2b8>
+            default:
+                UART_SendChar('I');
+ 8000538:	2049      	movs	r0, #73	@ 0x49
+ 800053a:	f000 f939 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('n');
+ 800053e:	206e      	movs	r0, #110	@ 0x6e
+ 8000540:	f000 f936 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('v');
+ 8000544:	2076      	movs	r0, #118	@ 0x76
+ 8000546:	f000 f933 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('a');
+ 800054a:	2061      	movs	r0, #97	@ 0x61
+ 800054c:	f000 f930 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('l');
+ 8000550:	206c      	movs	r0, #108	@ 0x6c
+ 8000552:	f000 f92d 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('i');
+ 8000556:	2069      	movs	r0, #105	@ 0x69
+ 8000558:	f000 f92a 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('d');
+ 800055c:	2064      	movs	r0, #100	@ 0x64
+ 800055e:	f000 f927 	bl	80007b0 <UART_SendChar>
+                UART_SendChar(' ');
+ 8000562:	2020      	movs	r0, #32
+ 8000564:	f000 f924 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('c');
+ 8000568:	2063      	movs	r0, #99	@ 0x63
+ 800056a:	f000 f921 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('h');
+ 800056e:	2068      	movs	r0, #104	@ 0x68
+ 8000570:	f000 f91e 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('o');
+ 8000574:	206f      	movs	r0, #111	@ 0x6f
+ 8000576:	f000 f91b 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('i');
+ 800057a:	2069      	movs	r0, #105	@ 0x69
+ 800057c:	f000 f918 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('c');
+ 8000580:	2063      	movs	r0, #99	@ 0x63
+ 8000582:	f000 f915 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('e');
+ 8000586:	2065      	movs	r0, #101	@ 0x65
+ 8000588:	f000 f912 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('.');
+ 800058c:	202e      	movs	r0, #46	@ 0x2e
+ 800058e:	f000 f90f 	bl	80007b0 <UART_SendChar>
+                UART_SendChar(' ');
+ 8000592:	2020      	movs	r0, #32
+ 8000594:	f000 f90c 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('T');
+ 8000598:	2054      	movs	r0, #84	@ 0x54
+ 800059a:	f000 f909 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('r');
+ 800059e:	2072      	movs	r0, #114	@ 0x72
+ 80005a0:	f000 f906 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('y');
+ 80005a4:	2079      	movs	r0, #121	@ 0x79
+ 80005a6:	f000 f903 	bl	80007b0 <UART_SendChar>
+                UART_SendChar(' ');
+ 80005aa:	2020      	movs	r0, #32
+ 80005ac:	f000 f900 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('a');
+ 80005b0:	2061      	movs	r0, #97	@ 0x61
+ 80005b2:	f000 f8fd 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('g');
+ 80005b6:	2067      	movs	r0, #103	@ 0x67
+ 80005b8:	f000 f8fa 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('a');
+ 80005bc:	2061      	movs	r0, #97	@ 0x61
+ 80005be:	f000 f8f7 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('i');
+ 80005c2:	2069      	movs	r0, #105	@ 0x69
+ 80005c4:	f000 f8f4 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('n');
+ 80005c8:	206e      	movs	r0, #110	@ 0x6e
+ 80005ca:	f000 f8f1 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('.');
+ 80005ce:	202e      	movs	r0, #46	@ 0x2e
+ 80005d0:	f000 f8ee 	bl	80007b0 <UART_SendChar>
+                UART_SendChar('\n');
+ 80005d4:	200a      	movs	r0, #10
+ 80005d6:	f000 f8eb 	bl	80007b0 <UART_SendChar>
+                break;
+ 80005da:	bf00      	nop
+    while (1) {
+ 80005dc:	e6a6      	b.n	800032c <Menu+0x6>
+        }
+    }
+}
+ 80005de:	3708      	adds	r7, #8
+ 80005e0:	46bd      	mov	sp, r7
+ 80005e2:	bd80      	pop	{r7, pc}
+
+080005e4 <PWM_Init>:
+#include "stm32f446xx.h"
+
+void PWM_Init(void) {
+ 80005e4:	b480      	push	{r7}
+ 80005e6:	af00      	add	r7, sp, #0
+    // Enable clock for GPIOA and TIM2
+    RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
+ 80005e8:	4b1e      	ldr	r3, [pc, #120]	@ (8000664 <PWM_Init+0x80>)
+ 80005ea:	6b1b      	ldr	r3, [r3, #48]	@ 0x30
+ 80005ec:	4a1d      	ldr	r2, [pc, #116]	@ (8000664 <PWM_Init+0x80>)
+ 80005ee:	f043 0301 	orr.w	r3, r3, #1
+ 80005f2:	6313      	str	r3, [r2, #48]	@ 0x30
+    RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
+ 80005f4:	4b1b      	ldr	r3, [pc, #108]	@ (8000664 <PWM_Init+0x80>)
+ 80005f6:	6c1b      	ldr	r3, [r3, #64]	@ 0x40
+ 80005f8:	4a1a      	ldr	r2, [pc, #104]	@ (8000664 <PWM_Init+0x80>)
+ 80005fa:	f043 0301 	orr.w	r3, r3, #1
+ 80005fe:	6413      	str	r3, [r2, #64]	@ 0x40
+
+    // Configure PA0 as alternate function (TIM2_CH1)
+    GPIOA->MODER |= (2 << (0 * 2));
+ 8000600:	4b19      	ldr	r3, [pc, #100]	@ (8000668 <PWM_Init+0x84>)
+ 8000602:	681b      	ldr	r3, [r3, #0]
+ 8000604:	4a18      	ldr	r2, [pc, #96]	@ (8000668 <PWM_Init+0x84>)
+ 8000606:	f043 0302 	orr.w	r3, r3, #2
+ 800060a:	6013      	str	r3, [r2, #0]
+    GPIOA->AFR[0] |= (1 << (0 * 4)); // AF1 for TIM2
+ 800060c:	4b16      	ldr	r3, [pc, #88]	@ (8000668 <PWM_Init+0x84>)
+ 800060e:	6a1b      	ldr	r3, [r3, #32]
+ 8000610:	4a15      	ldr	r2, [pc, #84]	@ (8000668 <PWM_Init+0x84>)
+ 8000612:	f043 0301 	orr.w	r3, r3, #1
+ 8000616:	6213      	str	r3, [r2, #32]
+
+    // Configure TIM2 for PWM
+    TIM2->PSC = 15; // Prescaler
+ 8000618:	f04f 4380 	mov.w	r3, #1073741824	@ 0x40000000
+ 800061c:	220f      	movs	r2, #15
+ 800061e:	629a      	str	r2, [r3, #40]	@ 0x28
+    TIM2->ARR = 999; // Auto-reload register
+ 8000620:	f04f 4380 	mov.w	r3, #1073741824	@ 0x40000000
+ 8000624:	f240 32e7 	movw	r2, #999	@ 0x3e7
+ 8000628:	62da      	str	r2, [r3, #44]	@ 0x2c
+    TIM2->CCMR1 |= (6 << 4); // PWM mode 1
+ 800062a:	f04f 4380 	mov.w	r3, #1073741824	@ 0x40000000
+ 800062e:	699b      	ldr	r3, [r3, #24]
+ 8000630:	f04f 4280 	mov.w	r2, #1073741824	@ 0x40000000
+ 8000634:	f043 0360 	orr.w	r3, r3, #96	@ 0x60
+ 8000638:	6193      	str	r3, [r2, #24]
+    TIM2->CCER |= TIM_CCER_CC1E; // Enable channel 1
+ 800063a:	f04f 4380 	mov.w	r3, #1073741824	@ 0x40000000
+ 800063e:	6a1b      	ldr	r3, [r3, #32]
+ 8000640:	f04f 4280 	mov.w	r2, #1073741824	@ 0x40000000
+ 8000644:	f043 0301 	orr.w	r3, r3, #1
+ 8000648:	6213      	str	r3, [r2, #32]
+    TIM2->CR1 |= TIM_CR1_CEN; // Enable TIM2
+ 800064a:	f04f 4380 	mov.w	r3, #1073741824	@ 0x40000000
+ 800064e:	681b      	ldr	r3, [r3, #0]
+ 8000650:	f04f 4280 	mov.w	r2, #1073741824	@ 0x40000000
+ 8000654:	f043 0301 	orr.w	r3, r3, #1
+ 8000658:	6013      	str	r3, [r2, #0]
+}
+ 800065a:	bf00      	nop
+ 800065c:	46bd      	mov	sp, r7
+ 800065e:	bc80      	pop	{r7}
+ 8000660:	4770      	bx	lr
+ 8000662:	bf00      	nop
+ 8000664:	40023800 	.word	0x40023800
+ 8000668:	40020000 	.word	0x40020000
+
+0800066c <PWM_SetDutyCycle>:
+
+void PWM_SetDutyCycle(uint8_t duty_cycle) {
+ 800066c:	b480      	push	{r7}
+ 800066e:	b083      	sub	sp, #12
+ 8000670:	af00      	add	r7, sp, #0
+ 8000672:	4603      	mov	r3, r0
+ 8000674:	71fb      	strb	r3, [r7, #7]
+    TIM2->CCR1 = duty_cycle * 10; // Set duty cycle (0-100)
+ 8000676:	79fa      	ldrb	r2, [r7, #7]
+ 8000678:	4613      	mov	r3, r2
+ 800067a:	009b      	lsls	r3, r3, #2
+ 800067c:	4413      	add	r3, r2
+ 800067e:	005b      	lsls	r3, r3, #1
+ 8000680:	461a      	mov	r2, r3
+ 8000682:	f04f 4380 	mov.w	r3, #1073741824	@ 0x40000000
+ 8000686:	635a      	str	r2, [r3, #52]	@ 0x34
+}
+ 8000688:	bf00      	nop
+ 800068a:	370c      	adds	r7, #12
+ 800068c:	46bd      	mov	sp, r7
+ 800068e:	bc80      	pop	{r7}
+ 8000690:	4770      	bx	lr
+	...
+
+08000694 <LED_PWM_Control>:
+void LED_PWM_Control(void) {
+ 8000694:	b580      	push	{r7, lr}
+ 8000696:	b082      	sub	sp, #8
+ 8000698:	af00      	add	r7, sp, #0
+    static uint8_t intensity = 0;
+    static uint8_t press_count = 0;
+
+    while (1) {
+        if (Button_Pressed()) {
+ 800069a:	f7ff fddf 	bl	800025c <Button_Pressed>
+ 800069e:	4603      	mov	r3, r0
+ 80006a0:	2b00      	cmp	r3, #0
+ 80006a2:	d024      	beq.n	80006ee <LED_PWM_Control+0x5a>
+            UART_SendChar('B'); // Debugging message for button press
+ 80006a4:	2042      	movs	r0, #66	@ 0x42
+ 80006a6:	f000 f883 	bl	80007b0 <UART_SendChar>
+            press_count++;
+ 80006aa:	4b16      	ldr	r3, [pc, #88]	@ (8000704 <LED_PWM_Control+0x70>)
+ 80006ac:	781b      	ldrb	r3, [r3, #0]
+ 80006ae:	3301      	adds	r3, #1
+ 80006b0:	b2da      	uxtb	r2, r3
+ 80006b2:	4b14      	ldr	r3, [pc, #80]	@ (8000704 <LED_PWM_Control+0x70>)
+ 80006b4:	701a      	strb	r2, [r3, #0]
+            if (press_count >= 4) {
+ 80006b6:	4b13      	ldr	r3, [pc, #76]	@ (8000704 <LED_PWM_Control+0x70>)
+ 80006b8:	781b      	ldrb	r3, [r3, #0]
+ 80006ba:	2b03      	cmp	r3, #3
+ 80006bc:	d906      	bls.n	80006cc <LED_PWM_Control+0x38>
+                press_count = 0;
+ 80006be:	4b11      	ldr	r3, [pc, #68]	@ (8000704 <LED_PWM_Control+0x70>)
+ 80006c0:	2200      	movs	r2, #0
+ 80006c2:	701a      	strb	r2, [r3, #0]
+                intensity = 0;  // Reset to initial intensity
+ 80006c4:	4b10      	ldr	r3, [pc, #64]	@ (8000708 <LED_PWM_Control+0x74>)
+ 80006c6:	2200      	movs	r2, #0
+ 80006c8:	701a      	strb	r2, [r3, #0]
+ 80006ca:	e005      	b.n	80006d8 <LED_PWM_Control+0x44>
+            } else {
+                intensity += 64;  // Increase intensity (4 steps: 0, 64, 128, 192, 255)
+ 80006cc:	4b0e      	ldr	r3, [pc, #56]	@ (8000708 <LED_PWM_Control+0x74>)
+ 80006ce:	781b      	ldrb	r3, [r3, #0]
+ 80006d0:	3340      	adds	r3, #64	@ 0x40
+ 80006d2:	b2da      	uxtb	r2, r3
+ 80006d4:	4b0c      	ldr	r3, [pc, #48]	@ (8000708 <LED_PWM_Control+0x74>)
+ 80006d6:	701a      	strb	r2, [r3, #0]
+            }
+            PWM_SetDutyCycle(intensity);
+ 80006d8:	4b0b      	ldr	r3, [pc, #44]	@ (8000708 <LED_PWM_Control+0x74>)
+ 80006da:	781b      	ldrb	r3, [r3, #0]
+ 80006dc:	4618      	mov	r0, r3
+ 80006de:	f7ff ffc5 	bl	800066c <PWM_SetDutyCycle>
+            while (Button_Pressed()); // Wait for button release
+ 80006e2:	bf00      	nop
+ 80006e4:	f7ff fdba 	bl	800025c <Button_Pressed>
+ 80006e8:	4603      	mov	r3, r0
+ 80006ea:	2b00      	cmp	r3, #0
+ 80006ec:	d1fa      	bne.n	80006e4 <LED_PWM_Control+0x50>
+        }
+        for (volatile uint32_t i = 0; i < 1000000; i++); // Noticeable delay
+ 80006ee:	2300      	movs	r3, #0
+ 80006f0:	607b      	str	r3, [r7, #4]
+ 80006f2:	e002      	b.n	80006fa <LED_PWM_Control+0x66>
+ 80006f4:	687b      	ldr	r3, [r7, #4]
+ 80006f6:	3301      	adds	r3, #1
+ 80006f8:	607b      	str	r3, [r7, #4]
+ 80006fa:	687b      	ldr	r3, [r7, #4]
+ 80006fc:	4a03      	ldr	r2, [pc, #12]	@ (800070c <LED_PWM_Control+0x78>)
+ 80006fe:	4293      	cmp	r3, r2
+ 8000700:	d9f8      	bls.n	80006f4 <LED_PWM_Control+0x60>
+        if (Button_Pressed()) {
+ 8000702:	e7ca      	b.n	800069a <LED_PWM_Control+0x6>
+ 8000704:	20000021 	.word	0x20000021
+ 8000708:	20000022 	.word	0x20000022
+ 800070c:	000f423f 	.word	0x000f423f
+
+08000710 <SystemInit>:
+#include "stm32f446xx.h"
+
+void SystemInit(void) {
+ 8000710:	b480      	push	{r7}
+ 8000712:	af00      	add	r7, sp, #0
+    // Set system clock to 16 MHz (HSI)
+    RCC->CR |= RCC_CR_HSION;
+ 8000714:	4b0d      	ldr	r3, [pc, #52]	@ (800074c <SystemInit+0x3c>)
+ 8000716:	681b      	ldr	r3, [r3, #0]
+ 8000718:	4a0c      	ldr	r2, [pc, #48]	@ (800074c <SystemInit+0x3c>)
+ 800071a:	f043 0301 	orr.w	r3, r3, #1
+ 800071e:	6013      	str	r3, [r2, #0]
+    while (!(RCC->CR & RCC_CR_HSIRDY));
+ 8000720:	bf00      	nop
+ 8000722:	4b0a      	ldr	r3, [pc, #40]	@ (800074c <SystemInit+0x3c>)
+ 8000724:	681b      	ldr	r3, [r3, #0]
+ 8000726:	f003 0302 	and.w	r3, r3, #2
+ 800072a:	2b00      	cmp	r3, #0
+ 800072c:	d0f9      	beq.n	8000722 <SystemInit+0x12>
+    RCC->CFGR = RCC_CFGR_SW_HSI;
+ 800072e:	4b07      	ldr	r3, [pc, #28]	@ (800074c <SystemInit+0x3c>)
+ 8000730:	2200      	movs	r2, #0
+ 8000732:	609a      	str	r2, [r3, #8]
+    while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_HSI);
+ 8000734:	bf00      	nop
+ 8000736:	4b05      	ldr	r3, [pc, #20]	@ (800074c <SystemInit+0x3c>)
+ 8000738:	689b      	ldr	r3, [r3, #8]
+ 800073a:	f003 030c 	and.w	r3, r3, #12
+ 800073e:	2b00      	cmp	r3, #0
+ 8000740:	d1f9      	bne.n	8000736 <SystemInit+0x26>
+}
+ 8000742:	bf00      	nop
+ 8000744:	bf00      	nop
+ 8000746:	46bd      	mov	sp, r7
+ 8000748:	bc80      	pop	{r7}
+ 800074a:	4770      	bx	lr
+ 800074c:	40023800 	.word	0x40023800
+
+08000750 <UART_Init>:
+#include "stm32f446xx.h"
+
+void UART_Init(void) {
+ 8000750:	b480      	push	{r7}
+ 8000752:	af00      	add	r7, sp, #0
+    // Enable clocks for GPIOA and USART2
+    RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
+ 8000754:	4b13      	ldr	r3, [pc, #76]	@ (80007a4 <UART_Init+0x54>)
+ 8000756:	6b1b      	ldr	r3, [r3, #48]	@ 0x30
+ 8000758:	4a12      	ldr	r2, [pc, #72]	@ (80007a4 <UART_Init+0x54>)
+ 800075a:	f043 0301 	orr.w	r3, r3, #1
+ 800075e:	6313      	str	r3, [r2, #48]	@ 0x30
+    RCC->APB1ENR |= RCC_APB1ENR_USART2EN;
+ 8000760:	4b10      	ldr	r3, [pc, #64]	@ (80007a4 <UART_Init+0x54>)
+ 8000762:	6c1b      	ldr	r3, [r3, #64]	@ 0x40
+ 8000764:	4a0f      	ldr	r2, [pc, #60]	@ (80007a4 <UART_Init+0x54>)
+ 8000766:	f443 3300 	orr.w	r3, r3, #131072	@ 0x20000
+ 800076a:	6413      	str	r3, [r2, #64]	@ 0x40
+
+    // Configure PA2 and PA3 for USART2
+    GPIOA->MODER |= (2 << (2 * 2)) | (2 << (3 * 2)); // Alternate function mode
+ 800076c:	4b0e      	ldr	r3, [pc, #56]	@ (80007a8 <UART_Init+0x58>)
+ 800076e:	681b      	ldr	r3, [r3, #0]
+ 8000770:	4a0d      	ldr	r2, [pc, #52]	@ (80007a8 <UART_Init+0x58>)
+ 8000772:	f043 03a0 	orr.w	r3, r3, #160	@ 0xa0
+ 8000776:	6013      	str	r3, [r2, #0]
+    GPIOA->AFR[0] |= (7 << (2 * 4)) | (7 << (3 * 4)); // AF7 for USART2
+ 8000778:	4b0b      	ldr	r3, [pc, #44]	@ (80007a8 <UART_Init+0x58>)
+ 800077a:	6a1b      	ldr	r3, [r3, #32]
+ 800077c:	4a0a      	ldr	r2, [pc, #40]	@ (80007a8 <UART_Init+0x58>)
+ 800077e:	f443 43ee 	orr.w	r3, r3, #30464	@ 0x7700
+ 8000782:	6213      	str	r3, [r2, #32]
+
+    // Configure USART2
+    USART2->BRR = 0x0683; // 9600 baud rate @ 16 MHz
+ 8000784:	4b09      	ldr	r3, [pc, #36]	@ (80007ac <UART_Init+0x5c>)
+ 8000786:	f240 6283 	movw	r2, #1667	@ 0x683
+ 800078a:	609a      	str	r2, [r3, #8]
+    USART2->CR1 |= USART_CR1_TE | USART_CR1_RE | USART_CR1_UE; // Enable TX, RX, and USART
+ 800078c:	4b07      	ldr	r3, [pc, #28]	@ (80007ac <UART_Init+0x5c>)
+ 800078e:	68db      	ldr	r3, [r3, #12]
+ 8000790:	4a06      	ldr	r2, [pc, #24]	@ (80007ac <UART_Init+0x5c>)
+ 8000792:	f443 5300 	orr.w	r3, r3, #8192	@ 0x2000
+ 8000796:	f043 030c 	orr.w	r3, r3, #12
+ 800079a:	60d3      	str	r3, [r2, #12]
+}
+ 800079c:	bf00      	nop
+ 800079e:	46bd      	mov	sp, r7
+ 80007a0:	bc80      	pop	{r7}
+ 80007a2:	4770      	bx	lr
+ 80007a4:	40023800 	.word	0x40023800
+ 80007a8:	40020000 	.word	0x40020000
+ 80007ac:	40004400 	.word	0x40004400
+
+080007b0 <UART_SendChar>:
+
+
+void UART_SendChar(char c) {
+ 80007b0:	b480      	push	{r7}
+ 80007b2:	b083      	sub	sp, #12
+ 80007b4:	af00      	add	r7, sp, #0
+ 80007b6:	4603      	mov	r3, r0
+ 80007b8:	71fb      	strb	r3, [r7, #7]
+    while (!(USART2->SR & USART_SR_TXE));
+ 80007ba:	bf00      	nop
+ 80007bc:	4b06      	ldr	r3, [pc, #24]	@ (80007d8 <UART_SendChar+0x28>)
+ 80007be:	681b      	ldr	r3, [r3, #0]
+ 80007c0:	f003 0380 	and.w	r3, r3, #128	@ 0x80
+ 80007c4:	2b00      	cmp	r3, #0
+ 80007c6:	d0f9      	beq.n	80007bc <UART_SendChar+0xc>
+    USART2->DR = c;
+ 80007c8:	4a03      	ldr	r2, [pc, #12]	@ (80007d8 <UART_SendChar+0x28>)
+ 80007ca:	79fb      	ldrb	r3, [r7, #7]
+ 80007cc:	6053      	str	r3, [r2, #4]
+}
+ 80007ce:	bf00      	nop
+ 80007d0:	370c      	adds	r7, #12
+ 80007d2:	46bd      	mov	sp, r7
+ 80007d4:	bc80      	pop	{r7}
+ 80007d6:	4770      	bx	lr
+ 80007d8:	40004400 	.word	0x40004400
+
+080007dc <UART_ReceiveChar>:
+
+char UART_ReceiveChar(void) {
+ 80007dc:	b480      	push	{r7}
+ 80007de:	af00      	add	r7, sp, #0
+    while (!(USART2->SR & USART_SR_RXNE));
+ 80007e0:	bf00      	nop
+ 80007e2:	4b06      	ldr	r3, [pc, #24]	@ (80007fc <UART_ReceiveChar+0x20>)
+ 80007e4:	681b      	ldr	r3, [r3, #0]
+ 80007e6:	f003 0320 	and.w	r3, r3, #32
+ 80007ea:	2b00      	cmp	r3, #0
+ 80007ec:	d0f9      	beq.n	80007e2 <UART_ReceiveChar+0x6>
+    return USART2->DR;
+ 80007ee:	4b03      	ldr	r3, [pc, #12]	@ (80007fc <UART_ReceiveChar+0x20>)
+ 80007f0:	685b      	ldr	r3, [r3, #4]
+ 80007f2:	b2db      	uxtb	r3, r3
+}
+ 80007f4:	4618      	mov	r0, r3
+ 80007f6:	46bd      	mov	sp, r7
+ 80007f8:	bc80      	pop	{r7}
+ 80007fa:	4770      	bx	lr
+ 80007fc:	40004400 	.word	0x40004400
+
+08000800 <Reset_Handler>:
+
+  .section .text.Reset_Handler
+  .weak Reset_Handler
+  .type Reset_Handler, %function
+Reset_Handler:
+  ldr   r0, =_estack
+ 8000800:	480d      	ldr	r0, [pc, #52]	@ (8000838 <LoopForever+0x2>)
+  mov   sp, r0          /* set stack pointer */
+ 8000802:	4685      	mov	sp, r0
+/* Call the clock system initialization function.*/
+  bl  SystemInit
+ 8000804:	f7ff ff84 	bl	8000710 <SystemInit>
+
+/* Copy the data segment initializers from flash to SRAM */
+  ldr r0, =_sdata
+ 8000808:	480c      	ldr	r0, [pc, #48]	@ (800083c <LoopForever+0x6>)
+  ldr r1, =_edata
+ 800080a:	490d      	ldr	r1, [pc, #52]	@ (8000840 <LoopForever+0xa>)
+  ldr r2, =_sidata
+ 800080c:	4a0d      	ldr	r2, [pc, #52]	@ (8000844 <LoopForever+0xe>)
+  movs r3, #0
+ 800080e:	2300      	movs	r3, #0
+  b LoopCopyDataInit
+ 8000810:	e002      	b.n	8000818 <LoopCopyDataInit>
+
+08000812 <CopyDataInit>:
+
+CopyDataInit:
+  ldr r4, [r2, r3]
+ 8000812:	58d4      	ldr	r4, [r2, r3]
+  str r4, [r0, r3]
+ 8000814:	50c4      	str	r4, [r0, r3]
+  adds r3, r3, #4
+ 8000816:	3304      	adds	r3, #4
+
+08000818 <LoopCopyDataInit>:
+
+LoopCopyDataInit:
+  adds r4, r0, r3
+ 8000818:	18c4      	adds	r4, r0, r3
+  cmp r4, r1
+ 800081a:	428c      	cmp	r4, r1
+  bcc CopyDataInit
+ 800081c:	d3f9      	bcc.n	8000812 <CopyDataInit>
+
+/* Zero fill the bss segment. */
+  ldr r2, =_sbss
+ 800081e:	4a0a      	ldr	r2, [pc, #40]	@ (8000848 <LoopForever+0x12>)
+  ldr r4, =_ebss
+ 8000820:	4c0a      	ldr	r4, [pc, #40]	@ (800084c <LoopForever+0x16>)
+  movs r3, #0
+ 8000822:	2300      	movs	r3, #0
+  b LoopFillZerobss
+ 8000824:	e001      	b.n	800082a <LoopFillZerobss>
+
+08000826 <FillZerobss>:
+
+FillZerobss:
+  str  r3, [r2]
+ 8000826:	6013      	str	r3, [r2, #0]
+  adds r2, r2, #4
+ 8000828:	3204      	adds	r2, #4
+
+0800082a <LoopFillZerobss>:
+
+LoopFillZerobss:
+  cmp r2, r4
+ 800082a:	42a2      	cmp	r2, r4
+  bcc FillZerobss
+ 800082c:	d3fb      	bcc.n	8000826 <FillZerobss>
+
+/* Call static constructors */
+  bl __libc_init_array
+ 800082e:	f000 f811 	bl	8000854 <__libc_init_array>
+/* Call the application's entry point.*/
+  bl main
+ 8000832:	f7ff fd69 	bl	8000308 <main>
+
+08000836 <LoopForever>:
+
+LoopForever:
+  b LoopForever
+ 8000836:	e7fe      	b.n	8000836 <LoopForever>
+  ldr   r0, =_estack
+ 8000838:	20020000 	.word	0x20020000
+  ldr r0, =_sdata
+ 800083c:	20000000 	.word	0x20000000
+  ldr r1, =_edata
+ 8000840:	20000004 	.word	0x20000004
+  ldr r2, =_sidata
+ 8000844:	080008bc 	.word	0x080008bc
+  ldr r2, =_sbss
+ 8000848:	20000004 	.word	0x20000004
+  ldr r4, =_ebss
+ 800084c:	20000024 	.word	0x20000024
+
+08000850 <ADC_IRQHandler>:
+ * @retval : None
+*/
+  .section .text.Default_Handler,"ax",%progbits
+Default_Handler:
+Infinite_Loop:
+  b Infinite_Loop
+ 8000850:	e7fe      	b.n	8000850 <ADC_IRQHandler>
+	...
+
+08000854 <__libc_init_array>:
+ 8000854:	b570      	push	{r4, r5, r6, lr}
+ 8000856:	4d0d      	ldr	r5, [pc, #52]	@ (800088c <__libc_init_array+0x38>)
+ 8000858:	4c0d      	ldr	r4, [pc, #52]	@ (8000890 <__libc_init_array+0x3c>)
+ 800085a:	1b64      	subs	r4, r4, r5
+ 800085c:	10a4      	asrs	r4, r4, #2
+ 800085e:	2600      	movs	r6, #0
+ 8000860:	42a6      	cmp	r6, r4
+ 8000862:	d109      	bne.n	8000878 <__libc_init_array+0x24>
+ 8000864:	4d0b      	ldr	r5, [pc, #44]	@ (8000894 <__libc_init_array+0x40>)
+ 8000866:	4c0c      	ldr	r4, [pc, #48]	@ (8000898 <__libc_init_array+0x44>)
+ 8000868:	f000 f818 	bl	800089c <_init>
+ 800086c:	1b64      	subs	r4, r4, r5
+ 800086e:	10a4      	asrs	r4, r4, #2
+ 8000870:	2600      	movs	r6, #0
+ 8000872:	42a6      	cmp	r6, r4
+ 8000874:	d105      	bne.n	8000882 <__libc_init_array+0x2e>
+ 8000876:	bd70      	pop	{r4, r5, r6, pc}
+ 8000878:	f855 3b04 	ldr.w	r3, [r5], #4
+ 800087c:	4798      	blx	r3
+ 800087e:	3601      	adds	r6, #1
+ 8000880:	e7ee      	b.n	8000860 <__libc_init_array+0xc>
+ 8000882:	f855 3b04 	ldr.w	r3, [r5], #4
+ 8000886:	4798      	blx	r3
+ 8000888:	3601      	adds	r6, #1
+ 800088a:	e7f2      	b.n	8000872 <__libc_init_array+0x1e>
+ 800088c:	080008b4 	.word	0x080008b4
+ 8000890:	080008b4 	.word	0x080008b4
+ 8000894:	080008b4 	.word	0x080008b4
+ 8000898:	080008b8 	.word	0x080008b8
+
+0800089c <_init>:
+ 800089c:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 800089e:	bf00      	nop
+ 80008a0:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 80008a2:	bc08      	pop	{r3}
+ 80008a4:	469e      	mov	lr, r3
+ 80008a6:	4770      	bx	lr
+
+080008a8 <_fini>:
+ 80008a8:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 80008aa:	bf00      	nop
+ 80008ac:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 80008ae:	bc08      	pop	{r3}
+ 80008b0:	469e      	mov	lr, r3
+ 80008b2:	4770      	bx	lr
